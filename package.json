@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/enoquebrito/ca-tdd-solid-ts-2/issues"
   },
-  "homepage": "https://github.com/enoquebrito/ca-tdd-solid-ts-2#readme"
+  "homepage": "https://github.com/enoquebrito/ca-tdd-solid-ts-2#readme",
+  "devDependencies": {
+    "git-commit-msg-linter": "^3.0.0"
+  }
 }
