@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist", // Local onde código JS será gerado
+    "module": "CommonJS", // Import/Export -> require/module.exports
+    "target": "ES2019",
+    "esModuleInterop": true,
+    "allowJs": true
+  }
+}
