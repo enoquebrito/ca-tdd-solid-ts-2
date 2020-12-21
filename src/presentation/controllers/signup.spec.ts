@@ -1,4 +1,5 @@
 import { SignUpController } from './signup.controller'
+import { HttpRequest } from '../protocols/http.protocols'
 
 describe('SignUp Controller', () => {
   test('Should return 400 if no name is provided', () => {
@@ -17,7 +18,7 @@ describe('SignUp Controller', () => {
 
   test('Should return 400 if no email is provided', () => {
     const sut = new SignUpController()
-    const httpRequest = {
+    const httpRequest: HttpRequest = {
       body: {
         name: 'any_name',
         password: 'any_password',
