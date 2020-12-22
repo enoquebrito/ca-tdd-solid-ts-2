@@ -90,7 +90,7 @@ describe('SignUp Controller', () => {
     const httpRequest: HttpRequest = {
       body: {
         name: 'any_name',
-        email: 'any_email@example.com',
+        email: 'invalid_email@example.com',
         password: 'any_password',
         passwordConfirmation: 'any_password'
       }
@@ -99,5 +99,21 @@ describe('SignUp Controller', () => {
 
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new InvalidParamError('email'))
+  })
+
+  test('Should call emailValidator with correct email', () => {
+    const { sut, emailValidatorStub } = sutFactory()
+    const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid')
+    const httpRequest: HttpRequest = {
+      body: {
+        name: 'any_name',
+        email: 'any_email@example.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password'
+      }
+    }
+
+    sut.handle(httpRequest)
+    expect(isValidSpy).toHaveBeenCalledWith('any_email@example.com')
   })
 })
