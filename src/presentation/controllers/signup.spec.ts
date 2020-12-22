@@ -1,21 +1,32 @@
-import { IEmailValidator } from './../protocols/emailValidator.protocol'
+import { EmailValidator, HttpRequest } from './../protocols'
 import { SignUpController } from './signup.controller'
-import { HttpRequest } from '../protocols/http.protocol'
 import { InternalServerError, InvalidParamError, MissingParamError } from '../errors'
 
 interface SutTypes {
   sut: SignUpController
-  emailValidatorStub: IEmailValidator
+  emailValidatorStub: EmailValidator
 }
 
-const sutFactory = (): SutTypes => {
-  class EmailValidatorStub implements IEmailValidator {
+const emailValidatorFactory = (): EmailValidator => {
+  class EmailValidatorStub implements EmailValidator {
     isValid (email: string): boolean {
       return true
     }
   }
+  return new EmailValidatorStub()
+}
 
-  const emailValidatorStub = new EmailValidatorStub()
+const emailValidatorWithErrorFactory = (): EmailValidator => {
+  class EmailValidatorStub implements EmailValidator {
+    isValid (email: string): boolean {
+      throw new Error()
+    }
+  }
+  return new EmailValidatorStub()
+}
+
+const sutFactory = (): SutTypes => {
+  const emailValidatorStub = emailValidatorFactory()
   const sut = new SignUpController(emailValidatorStub)
 
   return {
@@ -117,15 +128,8 @@ describe('SignUp Controller', () => {
   })
 
   test('Should return 500 if emailValidator throws', () => {
-    class EmailValidatorStub implements IEmailValidator {
-      isValid (email: string): boolean {
-        throw new Error()
-      }
-    }
-
-    const emailValidatorStub = new EmailValidatorStub()
+    const emailValidatorStub = emailValidatorWithErrorFactory()
     const sut = new SignUpController(emailValidatorStub)
-
     const httpRequest: HttpRequest = {
       body: {
         name: 'any_name',
@@ -134,6 +138,7 @@ describe('SignUp Controller', () => {
         passwordConfirmation: 'any_password'
       }
     }
+
     const httpResponse = sut.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(500)
