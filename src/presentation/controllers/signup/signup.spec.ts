@@ -189,4 +189,39 @@ describe('SignUp Controller', () => {
       password: 'any_password'
     })
   })
+
+  test('Should return 500 if addAccount throws', () => {
+    const { sut, addAccountStub } = sutFactory()
+    jest.spyOn(addAccountStub, 'add').mockImplementationOnce(() => {
+      throw new InternalServerError()
+    })
+    const httpRequest: HttpRequest = {
+      body: {
+        name: 'any_name',
+        email: 'valid_email@example.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password'
+      }
+    }
+
+    const httpResponse = sut.handle(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new InternalServerError())
+  })
+
+  test('Should return 400 if password fails', () => {
+    const { sut } = sutFactory()
+    const httpRequest: HttpRequest = {
+      body: {
+        name: 'any_name',
+        email: 'any_email@example.com',
+        password: 'any_password',
+        passwordConfirmation: 'another_password'
+      }
+    }
+    const httpResponse = sut.handle(httpRequest)
+    expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new InvalidParamError('passwordConfirmation'))
+  })
 })
