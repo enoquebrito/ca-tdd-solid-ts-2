@@ -210,18 +210,22 @@ describe('SignUp Controller', () => {
     expect(httpResponse.body).toEqual(new InternalServerError())
   })
 
-  test('Should return 400 if password fails', () => {
+  test('Should return 200 if addAccount succeeds', () => {
     const { sut } = sutFactory()
     const httpRequest: HttpRequest = {
       body: {
-        name: 'any_name',
-        email: 'any_email@example.com',
-        password: 'any_password',
-        passwordConfirmation: 'another_password'
+        name: 'valid_name',
+        email: 'valid_email@example.com',
+        password: 'valid_password',
+        passwordConfirmation: 'valid_password'
       }
     }
     const httpResponse = sut.handle(httpRequest)
-    expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new InvalidParamError('passwordConfirmation'))
+    expect(httpResponse.statusCode).toBe(200)
+    expect(httpResponse.body).toEqual({
+      id: 'valid_id',
+      name: 'valid_name',
+      email: 'valid_email@example.com'
+    })
   })
 })
