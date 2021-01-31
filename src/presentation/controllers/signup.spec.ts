@@ -1,10 +1,27 @@
 import { EmailValidator, HttpRequest } from './../protocols'
 import { SignUpController } from './signup.controller'
 import { InternalServerError, InvalidParamError, MissingParamError } from '../errors'
+import { AddAccount, AddAccountCommand } from '../../domain/usecases/add-account'
+import { AccountViewModel } from '../../domain/view-models'
 
 interface SutTypes {
   sut: SignUpController
   emailValidatorStub: EmailValidator
+  addAccountStub: AddAccount
+}
+
+const addAcountFactory = (): AddAccount => {
+  class AddAccountStub implements AddAccount {
+    add (account: AddAccountCommand): AccountViewModel {
+      return {
+        id: 'valid_id',
+        name: 'valid_name',
+        email: 'valid_email@example.com'
+      }
+    }
+  }
+
+  return new AddAccountStub()
 }
 
 const emailValidatorFactory = (): EmailValidator => {
@@ -17,12 +34,14 @@ const emailValidatorFactory = (): EmailValidator => {
 }
 
 const sutFactory = (): SutTypes => {
+  const addAccountStub = addAcountFactory()
   const emailValidatorStub = emailValidatorFactory()
-  const sut = new SignUpController(emailValidatorStub)
+  const sut = new SignUpController(emailValidatorStub, addAccountStub)
 
   return {
     sut,
-    emailValidatorStub
+    emailValidatorStub,
+    addAccountStub
   }
 }
 
@@ -119,11 +138,10 @@ describe('SignUp Controller', () => {
   })
 
   test('Should return 500 if emailValidator throws', () => {
-    const emailValidatorStub = emailValidatorFactory()
+    const { sut, emailValidatorStub } = sutFactory()
     jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => {
       throw new InternalServerError()
     })
-    const sut = new SignUpController(emailValidatorStub)
     const httpRequest: HttpRequest = {
       body: {
         name: 'any_name',
@@ -152,5 +170,25 @@ describe('SignUp Controller', () => {
     const httpResponse = sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new InvalidParamError('passwordConfirmation'))
+  })
+
+  test('Should call add with correct values', () => {
+    const { sut, addAccountStub } = sutFactory()
+    const addSpy = jest.spyOn(addAccountStub, 'add')
+    const httpRequest: HttpRequest = {
+      body: {
+        name: 'any_name',
+        email: 'any_email@example.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password'
+      }
+    }
+
+    sut.handle(httpRequest)
+    expect(addSpy).toHaveBeenCalledWith({
+      name: 'any_name',
+      email: 'any_email@example.com',
+      password: 'any_password'
+    })
   })
 })
