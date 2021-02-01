@@ -7,5 +7,5 @@ export interface AddAccountCommand {
 }
 
 export interface AddAccount {
-  add: (account: AddAccountCommand) => AccountViewModel
+  add: (account: AddAccountCommand) => Promise<AccountViewModel>
 }

@@ -5,7 +5,7 @@ import { InternalServerError, InvalidParamError, MissingParamError } from '../..
 export class SignUpController implements Controller {
   constructor (private readonly emailValidator: EmailValidator, private readonly addAcount: AddAccount) { }
 
-  handle (httpRequest: HttpRequest): HttpResponse {
+  async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const requiredFields = ['name', 'email', 'password', 'passwordConfirmation']
 
@@ -26,7 +26,7 @@ export class SignUpController implements Controller {
         return badRequest(new InvalidParamError('email'))
       }
 
-      const account = this.addAcount.add({
+      const account = await this.addAcount.add({
         name,
         email,
         password
