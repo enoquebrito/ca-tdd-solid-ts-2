@@ -1,11 +1,12 @@
 {
-  "name": "Udemy-Manguinho",
+  "name": "ca-tdd-ts",
   "version": "1.0.0",
   "description": "��#\u0000 \u0000c\u0000a\u0000-\u0000t\u0000d\u0000d\u0000-\u0000s\u0000o\u0000l\u0000i\u0000d\u0000-\u0000t\u0000s\u0000-\u00002\u0000\r\u0000 \u0000",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watch",
-    "test:staged": "jest --passWithNoTests"
+    "test": "jest --watch --noStackTrace --runInBand",
+    "test:staged": "jest --passWithNoTests",
+    "test:coverage": "npm test -- --coverage"
   },
   "repository": {
     "type": "git",
