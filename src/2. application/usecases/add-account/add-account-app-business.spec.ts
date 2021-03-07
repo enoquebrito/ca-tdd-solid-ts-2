@@ -1,8 +1,8 @@
 import { Encrypter, AddAccountCommand, AccountViewModel, AddAccountRepository } from './add-account-app-business.protocols'
-import { DbAddAccount } from './add-account-app-business'
+import { AddAccountAppBusiness } from './add-account-app-business'
 
 interface SutTypes {
-  sut: DbAddAccount
+  sut: AddAccountAppBusiness
   encrypterStub: Encrypter
   addAccountRepositoryStub: AddAccountRepository
 }
@@ -33,7 +33,7 @@ const addAccountRepositoryFactory = (): AddAccountRepository => {
 const sutFactory = (): SutTypes => {
   const encrypterStub = encrypterFactory()
   const addAccountRepositoryStub = addAccountRepositoryFactory()
-  const sut = new DbAddAccount(encrypterStub, addAccountRepositoryStub)
+  const sut = new AddAccountAppBusiness(encrypterStub, addAccountRepositoryStub)
   return {
     sut,
     encrypterStub,
@@ -84,5 +84,19 @@ describe('DbAddAccount Usecase', () => {
       email: 'valid_email',
       password: 'hashed_password'
     })
+  })
+
+  test('Should throw if addAccountRepository throws', async () => {
+    const { sut, addAccountRepositoryStub } = sutFactory()
+    jest.spyOn(addAccountRepositoryStub, 'add').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+
+    const accountData = {
+      name: 'valid_name',
+      email: 'valid_email',
+      password: 'valid_password'
+    }
+
+    const promise = sut.add(accountData)
+    await expect(promise).rejects.toThrow()
   })
 })
