@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest --noStackTrace --runInBand",
     "test:staged": "npm test -- --passWithNoTests --findRelatedTests",
-    "test:coverage": "npm test -- --coverage"
+    "test:coverage": "npm test -- --coverage",
+    "test:watch": "npm test -- --watch"
   },
   "repository": {
     "type": "git",
