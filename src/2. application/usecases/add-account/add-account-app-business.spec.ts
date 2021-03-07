@@ -45,7 +45,8 @@ describe('DbAddAccount Usecase', () => {
   test('Should call Encrypter with correct password', async () => {
     const { sut, encrypterStub } = sutFactory()
     const encryptSpy = jest.spyOn(encrypterStub, 'encrypt')
-    const accountData = {
+
+    const accountData: AddAccountCommand = {
       name: 'valid_name',
       email: 'valid_email',
       password: 'valid_password'
@@ -59,7 +60,7 @@ describe('DbAddAccount Usecase', () => {
     const { sut, encrypterStub } = sutFactory()
     jest.spyOn(encrypterStub, 'encrypt').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
 
-    const accountData = {
+    const accountData: AddAccountCommand = {
       name: 'valid_name',
       email: 'valid_email',
       password: 'valid_password'
@@ -72,7 +73,8 @@ describe('DbAddAccount Usecase', () => {
   test('Should call AddAccountRepository with correct values', async () => {
     const { sut, addAccountRepositoryStub } = sutFactory()
     const addSpy = jest.spyOn(addAccountRepositoryStub, 'add')
-    const accountData = {
+
+    const accountData: AddAccountCommand = {
       name: 'valid_name',
       email: 'valid_email',
       password: 'valid_password'
@@ -90,7 +92,7 @@ describe('DbAddAccount Usecase', () => {
     const { sut, addAccountRepositoryStub } = sutFactory()
     jest.spyOn(addAccountRepositoryStub, 'add').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
 
-    const accountData = {
+    const accountData: AddAccountCommand = {
       name: 'valid_name',
       email: 'valid_email',
       password: 'valid_password'
@@ -98,5 +100,22 @@ describe('DbAddAccount Usecase', () => {
 
     const promise = sut.add(accountData)
     await expect(promise).rejects.toThrow()
+  })
+
+  test('Should return an account on success', async () => {
+    const { sut } = sutFactory()
+
+    const accountData: AddAccountCommand = {
+      name: 'valid_name',
+      email: 'valid_email',
+      password: 'valid_password'
+    }
+
+    const createdAccount = await sut.add(accountData)
+    expect(createdAccount).toEqual({
+      id: 'valid_id',
+      name: 'valid_name',
+      email: 'valid_email'
+    })
   })
 })
