@@ -10,6 +10,11 @@ describe('AddAccount MongoDB', () => {
     await MongoDbHelper.disconnect()
   })
 
+  beforeEach(async () => {
+    const accountCollection = MongoDbHelper.getCollection('accounts')
+    await accountCollection.deleteMany({})
+  })
+
   const sutFactory = (): AddAccountMongoDb => {
     return new AddAccountMongoDb()
   }
