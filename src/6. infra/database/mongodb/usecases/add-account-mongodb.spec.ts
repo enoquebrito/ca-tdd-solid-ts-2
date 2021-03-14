@@ -28,6 +28,7 @@ describe('AddAccount MongoDB', () => {
     }
 
     const createdAccount = await sut.add(newAccountData)
+    console.log(createdAccount)
     expect(createdAccount).toBeTruthy()
     expect(createdAccount.id).toBeTruthy()
     expect(createdAccount.name).toBe('any_name')

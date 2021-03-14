@@ -16,5 +16,16 @@ export const MongoDbHelper = {
 
   getCollection (name: string): Collection {
     return this.client.db().collection(name)
+  },
+
+  map<T> (collection: any, ...properties: string[]): T {
+    for (const prop of properties) {
+      if (collection[prop]) {
+        delete collection[prop]
+      }
+    }
+
+    const { _id, ...collectionModel } = collection
+    return Object.assign({}, collectionModel, { id: _id })
   }
 }
