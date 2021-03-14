@@ -10,8 +10,12 @@ describe('AddAccount MongoDB', () => {
     await MongoDbHelper.disconnect()
   })
 
+  const sutFactory = (): AddAccountMongoDb => {
+    return new AddAccountMongoDb()
+  }
+
   it('Should return an account on success', async () => {
-    const sut = new AddAccountMongoDb()
+    const sut = sutFactory()
     const newAccountData = {
       name: 'any_name',
       email: 'any_email@mail.com',
