@@ -1,5 +1,5 @@
-import { AddAccountCommand, AccountViewModel } from '../../../../3. domain/usecases/add-account'
-import { AddAccountRepository } from '../../../../4. data/repository/usecases/add-account-repository'
+import { AddAccountCommand, AccountViewModel } from '../../../../4. domain/usecases/add-account'
+import { AddAccountRepository } from '../../../../5. data/repository/usecases/add-account-repository'
 import { MongoDbHelper } from '../helper/mongodb.helper'
 
 export class AddAccountMongoDb implements AddAccountRepository {
