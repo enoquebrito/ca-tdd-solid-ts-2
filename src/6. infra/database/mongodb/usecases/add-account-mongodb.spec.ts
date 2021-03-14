@@ -32,6 +32,5 @@ describe('AddAccount MongoDB', () => {
     expect(createdAccount.id).toBeTruthy()
     expect(createdAccount.name).toBe('any_name')
     expect(createdAccount.email).toBe('any_email@mail.com')
-    console.log(createdAccount)
   })
 })
