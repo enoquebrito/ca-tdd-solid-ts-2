@@ -1,4 +1,4 @@
-import { AddAccountCommand, AccountViewModel } from './add-account.procols'
+import { AddAccountCommand, AccountViewModel } from '.'
 
 export interface AddAccount {
   add: (account: AddAccountCommand) => Promise<AccountViewModel>

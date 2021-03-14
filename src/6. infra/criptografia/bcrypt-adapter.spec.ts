@@ -23,7 +23,7 @@ const sutFactory = (): SutTypes => {
 }
 
 describe('Bcrypt Adapter', () => {
-  test('Should call bcrypt with correct values', async () => {
+  it('Should call bcrypt with correct values', async () => {
     const { sut, salt } = sutFactory()
     const hashSpy = jest.spyOn(bcrypt, 'hash')
 
@@ -31,10 +31,28 @@ describe('Bcrypt Adapter', () => {
     expect(hashSpy).toHaveBeenCalledWith('any_value', salt)
   })
 
-  test('Should return a hash on success', async () => {
+  it('Should return a hash on success', async () => {
     const { sut } = sutFactory()
 
     const hash = await sut.encrypt('any_value')
     expect(hash).toBe('hashed_value')
+  })
+
+  it('Should throw if bcrypt throws', async () => {
+    const { sut } = sutFactory()
+    jest.spyOn(bcrypt, 'hash').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+
+    const promise = sut.encrypt('any_value')
+    await expect(promise).rejects.toThrow()
+  })
+
+  it('Should throw if bcrypt throws', async () => {
+    const { sut } = sutFactory()
+    jest.spyOn(bcrypt, 'hash').mockImplementationOnce(async (): Promise<string> => {
+      throw new Error()
+    })
+
+    const promise = sut.encrypt('any_value')
+    await expect(promise).rejects.toThrow()
   })
 })

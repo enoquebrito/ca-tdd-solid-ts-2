@@ -42,7 +42,7 @@ const sutFactory = (): SutTypes => {
 }
 
 describe('DbAddAccount Usecase', () => {
-  test('Should call Encrypter with correct password', async () => {
+  it('Should call Encrypter with correct password', async () => {
     const { sut, encrypterStub } = sutFactory()
     const encryptSpy = jest.spyOn(encrypterStub, 'encrypt')
 
@@ -56,7 +56,7 @@ describe('DbAddAccount Usecase', () => {
     expect(encryptSpy).toHaveBeenCalledWith('valid_password')
   })
 
-  test('Should throw if encrypter throws', async () => {
+  it('Should throw if encrypter throws', async () => {
     const { sut, encrypterStub } = sutFactory()
     jest.spyOn(encrypterStub, 'encrypt').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
 
@@ -70,7 +70,7 @@ describe('DbAddAccount Usecase', () => {
     await expect(promise).rejects.toThrow()
   })
 
-  test('Should call AddAccountRepository with correct values', async () => {
+  it('Should call AddAccountRepository with correct values', async () => {
     const { sut, addAccountRepositoryStub } = sutFactory()
     const addSpy = jest.spyOn(addAccountRepositoryStub, 'add')
 
@@ -88,7 +88,7 @@ describe('DbAddAccount Usecase', () => {
     })
   })
 
-  test('Should throw if addAccountRepository throws', async () => {
+  it('Should throw if addAccountRepository throws', async () => {
     const { sut, addAccountRepositoryStub } = sutFactory()
     jest.spyOn(addAccountRepositoryStub, 'add').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
 
@@ -102,7 +102,7 @@ describe('DbAddAccount Usecase', () => {
     await expect(promise).rejects.toThrow()
   })
 
-  test('Should return an account on success', async () => {
+  it('Should return an account on success', async () => {
     const { sut } = sutFactory()
 
     const accountData: AddAccountCommand = {
