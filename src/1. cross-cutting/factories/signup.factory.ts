@@ -4,7 +4,7 @@ import { AddAccountAppBusiness } from '../../3. application/usecases/add-account
 import { BcryptAdapter } from '../../7. infra/criptografia/bcrypt-adapter'
 import { AddAccountMongoDb } from '../../7. infra/database/mongodb/usecases/add-account-mongodb'
 
-export const makeSignUpController = (): SignUpController => {
+export const signUpControllerFactory = (): SignUpController => {
   const salt = 12
   const bcrypAdapter = new BcryptAdapter(salt)
   const addAccountMongoDb = new AddAccountMongoDb()

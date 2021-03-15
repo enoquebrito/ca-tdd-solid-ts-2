@@ -7,7 +7,8 @@ module.exports = {
     '!<rootDir>/src/**/*.protocols.ts',
     '!**/protocols/**',
     '!**/repository/**',
-    '!**/3. domain/**'
+    '!**/4. domain/**',
+    '!**/1. cross-cutting/**'
   ],
   preset: '@shelf/jest-mongodb',
   coverageProvider: "v8",
